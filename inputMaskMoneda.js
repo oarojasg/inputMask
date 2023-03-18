@@ -1,7 +1,7 @@
-        //Formato del campo Valor Comisión, sólo números y máximo 11 dígitos
-        $txtValorComisionIngresoEgreso.keydown(function (e) {
+        //Formato del campo Valor Venta, sólo números y máximo 18 dígitos
+        $valorVenta.keydown(function (e) {
             event.preventDefault();
-            var reg = /^[1-9][0-9]{0,10}$/;
+            var reg = /^[1-9][0-9]{0,18}$/;
             let stringModificado = $(this).val();
             let longitudInicial = stringModificado.length;
             let stringFinal = "";
@@ -24,12 +24,25 @@
             }
 
             //Creación del nuevo número
-            var valorConFormato = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(parseFloat(stringFinal));
+
+            //Si el stringFinal solo tiene ceros
+            var valorConFormato = "";
+            if (stringFinal == 0) {
+                let cantidadPuntos = Math.floor(stringFinal.length / 3);
+                longitudInicial += cantidadPuntos;
+                $.each([...Array(cantidadPuntos).keys()], (i) => {
+                    var indice = 3 * (i + 1) + i;
+                    stringFinal = stringFinal.slice(0, -indice) + "." + stringFinal.slice(-indice);
+                });
+                valorConFormato = "$ " + stringFinal + ".00";
+            }
+            else valorConFormato = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(parseFloat(stringFinal));
             $(this).val(valorConFormato.slice(0, -3));
+            $(this).css("text-align", "right");
 
             //Ubicación del cursor en nueva posición
             let posicionCursor = posicionFin + (valorConFormato.length - longitudInicial - 3);
-            e.target.setSelectionRange(posicionCursor, posicionCursor); 
+            e.target.setSelectionRange(posicionCursor, posicionCursor);
         });
 
         //When retrieving value: $txtValorComisionIngresoEgreso.val().replace(/[$.,\s]/g, '');
