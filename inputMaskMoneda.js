@@ -1,3 +1,5 @@
+        //When setting
+        $valorVenta.val(new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(parseFloat(objRespuesta.ValorVenta)).slice(0,-3));
         //Formato del campo Valor Venta, sólo números y máximo 18 dígitos
         $valorVenta.keydown(function (e) {
             event.preventDefault();
